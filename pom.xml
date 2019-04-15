@@ -7,7 +7,7 @@
     <version>7</version>
   </parent>
 
-  <groupId>com.contentful.vault</groupId>
+  <groupId>ps.one.vault</groupId>
   <artifactId>vault-parent</artifactId>
   <version>3.2.2-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -47,7 +47,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.7</java.version>
 
-    <android.platform>19</android.platform>
+    <android.platform>28</android.platform>
+    <android.path>/Users/fabrecco/Library/Android/sdk</android.path>
     <android.version>4.1.1.4</android.version>
     <cda.version>10.1.0</cda.version>
     <commons-codec.version>1.10</commons-codec.version>
@@ -236,6 +237,7 @@
           <version>4.5.0</version>
           <configuration>
             <sdk>
+              <path>${android.path}</path>
               <platform>${android.platform}</platform>
             </sdk>
           </configuration>
