@@ -17,6 +17,7 @@
 package com.contentful.vault;
 
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 
 public final class FieldMeta {
   private final String id;
@@ -24,6 +25,8 @@ public final class FieldMeta {
   private final String name;
 
   private final String setter;
+
+  private final String getter;
 
   private final TypeMirror type;
 
@@ -33,11 +36,15 @@ public final class FieldMeta {
 
   private final String arrayType;
 
+  private final boolean resource;
+
   FieldMeta(Builder builder) {
     this.id = builder.id;
     this.name = builder.name;
     this.setter = builder.setter;
+    this.getter = builder.getter;
     this.type = builder.type;
+    this.resource = builder.resource;
     this.sqliteType = builder.sqliteType;
     this.linkType = builder.linkType;
     this.arrayType = builder.arrayType;
@@ -53,6 +60,10 @@ public final class FieldMeta {
 
   public String setter() {
     return setter;
+  }
+
+  public String getter() {
+    return getter;
   }
 
   public TypeMirror type() {
@@ -87,27 +98,21 @@ public final class FieldMeta {
     return isArray() && !isArrayOfSymbols();
   }
 
-  @Override public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FieldMeta)) return false;
-
-    FieldMeta fieldMeta = (FieldMeta) o;
-
-    return id.equals(fieldMeta.id);
+  public boolean isResource() {
+    return resource;
   }
 
-  @Override public int hashCode() {
-    return id.hashCode();
-  }
 
   public static class Builder {
     String id;
     String name;
     TypeMirror type;
+    boolean resource;
     String sqliteType;
     String linkType;
     String arrayType;
     String setter;
+    String getter;
 
     public Builder setId(String id) {
       this.id = id;
@@ -124,8 +129,18 @@ public final class FieldMeta {
       return this;
     }
 
+    public Builder setGetter(String getter) {
+      this.getter = getter;
+      return this;
+    }
+
     public Builder setType(TypeMirror type) {
       this.type = type;
+      return this;
+    }
+
+    public Builder setResource(boolean resource) {
+      this.resource = resource;
       return this;
     }
 
@@ -151,5 +166,18 @@ public final class FieldMeta {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    FieldMeta fieldMeta = (FieldMeta) o;
+    return id.equals(fieldMeta.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

@@ -128,18 +128,18 @@ public class SyncBase extends BaseTest {
 
     Cat nyanCat = cats.get(0);
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.remoteId()).isEqualTo("nyancat");
+    assertThat(nyanCat.resource().remoteId()).isEqualTo("nyancat");
     assertThat(nyanCat.image()).isNotNull();
 
     Cat happyCat = cats.get(1);
     assertThat(happyCat).isNotNull();
-    assertThat(happyCat.remoteId()).isEqualTo("happycat");
+    assertThat(happyCat.resource().remoteId()).isEqualTo("happycat");
     assertThat(happyCat.name()).isEqualTo("Happy Cat");
     assertThat(happyCat.image()).isNotNull();
 
     Cat garfield = cats.get(2);
     assertThat(garfield).isNotNull();
-    assertThat(garfield.remoteId()).isEqualTo("garfield");
+    assertThat(garfield.resource().remoteId()).isEqualTo("garfield");
     assertThat(garfield.image()).isSameAs(happyCat.image());
     assertThat(garfield.bestFriend()).isNull();
 
@@ -155,8 +155,8 @@ public class SyncBase extends BaseTest {
     assertThat(cats).isNotNull();
     assertThat(cats).hasSize(3);
     assertThat(cats.get(0).name()).isEqualTo("Happier Cat");
-    assertThat(cats.get(0).remoteId()).isEqualTo("happycat");
-    assertThat(cats.get(1).remoteId()).isEqualTo("garfield");
-    assertThat(cats.get(2).remoteId()).isEqualTo("supercat");
+    assertThat(cats.get(0).resource().remoteId()).isEqualTo("happycat");
+    assertThat(cats.get(1).resource().remoteId()).isEqualTo("garfield");
+    assertThat(cats.get(2).resource().remoteId()).isEqualTo("supercat");
   }
 }

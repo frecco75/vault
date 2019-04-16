@@ -1,6 +1,6 @@
 package com.contentful.vault;
 
-abstract class AbsQuery<T extends Resource, E extends AbsQuery<T, E>> {
+abstract class AbsQuery<T, E extends AbsQuery<T, E>> {
   private final Class<T> type;
 
   private final Vault vault;

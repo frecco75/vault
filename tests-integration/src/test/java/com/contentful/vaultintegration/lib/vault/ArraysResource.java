@@ -20,15 +20,33 @@ import com.contentful.vault.Asset;
 import com.contentful.vault.ContentType;
 import com.contentful.vault.Field;
 import com.contentful.vault.Resource;
+
 import java.util.List;
 
 @ContentType("4rD4z2Ex0kEOgeWCWG4Se2")
-public class ArraysResource extends Resource {
-  @Field List<Asset> assets;
+public class ArraysResource {
+  @Field
+  private final Resource resource;
 
-  @Field List<String> symbols;
+  @Field
+  private final List<Asset> assets;
 
-  @Field List<BlobResource> blobs;
+  @Field
+  private final List<String> symbols;
+
+  @Field
+  private final List<BlobResource> blobs;
+
+  public ArraysResource(Resource resource, List<Asset> assets, List<String> symbols, List<BlobResource> blobs) {
+    this.resource = resource;
+    this.assets = assets;
+    this.symbols = symbols;
+    this.blobs = blobs;
+  }
+
+  public Resource resource() {
+    return resource;
+  }
 
   public List<Asset> assets() {
     return assets;

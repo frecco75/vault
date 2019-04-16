@@ -18,12 +18,16 @@ package com.contentful.vault;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 
-public final class Asset extends Resource implements Parcelable {
+public final class Asset implements Parcelable, ResourceInterface {
+
+  private final Resource resource;
+
   private final String url;
 
   private final String mimeType;
@@ -35,6 +39,7 @@ public final class Asset extends Resource implements Parcelable {
   private final HashMap<String, Object> file;
 
   Asset(Builder builder) {
+    this.resource = builder.resource;
     this.url = builder.url;
     this.mimeType = builder.mimeType;
     this.title = builder.title;
@@ -58,24 +63,61 @@ public final class Asset extends Resource implements Parcelable {
     return description;
   }
 
-  public Map<String, Object> file() {
+  public HashMap<String, Object> file() {
     return file;
   }
 
-  @Override String getIdPrefix() {
-    return ASSET.toString();
-  }
 
   static Builder builder() {
     return new Builder();
   }
 
+  @Override
+  public String remoteId() {
+    return resource != null ? resource.remoteId() : null;
+  }
+
+  @Override
+  public String createdAt() {
+    return resource != null ? resource.createdAt() : null;
+  }
+
+  @Override
+  public String updatedAt() {
+    return resource != null ? resource.updatedAt() : null;
+  }
+
+  @Override
+  public String contentType() {
+    return resource != null ? resource.contentType() : null;
+  }
+
+  private String getIdPrefix() {
+    return ASSET.toString();
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Asset)) return false;
+
+    Asset resource = (Asset) o;
+    String prefix = StringUtils.defaultString(getIdPrefix(), "");
+    if (!prefix.equals(StringUtils.defaultString(resource.getIdPrefix(), ""))) return false;
+    return (prefix + remoteId()).equals(prefix + resource.remoteId());
+  }
+
   static class Builder {
+    Resource resource;
     String url;
     String mimeType;
     String title;
     String description;
     HashMap<String, Object> file;
+
+    public Builder setResource(Resource resource) {
+      this.resource = resource;
+      return this;
+    }
 
     public Builder setUrl(String url) {
       this.url = url;
@@ -113,11 +155,11 @@ public final class Asset extends Resource implements Parcelable {
   }
 
   public void writeToParcel(Parcel out, int flags) {
-    out.writeString(remoteId());
+    out.writeString(resource.remoteId());
 
-    out.writeString(createdAt());
+    out.writeString(resource.createdAt());
 
-    writeOptionalString(out, updatedAt());
+    writeOptionalString(out, resource.updatedAt());
 
     out.writeString(url);
 
@@ -157,13 +199,7 @@ public final class Asset extends Resource implements Parcelable {
 
   @SuppressWarnings("unchecked")
   Asset(Parcel in) {
-    setRemoteId(in.readString());
-
-    setCreatedAt(in.readString());
-
-    if (in.readInt() != -1) {
-      setUpdatedAt(in.readString());
-    }
+    resource = new Resource(in.readString(), in.readString(), in.readInt() != -1 ? in.readString() : null, null);
 
     this.url = in.readString();
 

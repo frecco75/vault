@@ -54,8 +54,8 @@ public class ObserveTest extends BaseTest {
 
     List<Cat> cats = subscriber.values();
     assertThat(cats).hasSize(2);
-    assertThat(cats.get(0).updatedAt()).isEqualTo("2013-11-18T15:58:02.018Z");
-    assertThat(cats.get(1).updatedAt()).isEqualTo("2013-09-04T09:19:39.027Z");
+    assertThat(cats.get(0).resource().updatedAt()).isEqualTo("2013-11-18T15:58:02.018Z");
+    assertThat(cats.get(1).resource().updatedAt()).isEqualTo("2013-09-04T09:19:39.027Z");
   }
 
   @Test public void observeSyncResults() throws Exception {

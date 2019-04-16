@@ -17,20 +17,23 @@
 package com.contentful.vault;
 
 import android.database.Cursor;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class ModelHelper<T extends Resource> {
+public abstract class ModelHelper<R, P extends ProxyResource<R>> {
   public abstract String getTableName();
 
   public abstract List<FieldMeta> getFields();
 
   public abstract List<String> getCreateStatements(SpaceHelper spaceHelper);
 
-  public abstract T fromCursor(Cursor cursor);
+  public abstract P fromCursor(Cursor cursor);
 
-  protected abstract boolean setField(T resource, String name, Object value);
+  public abstract P fromResource(R resource);
+
+  protected abstract boolean setField(P proxy, String name, Object value);
 
   protected final <E extends Serializable> E fieldFromBlob(Class<E> clazz, Cursor cursor,
       int columnIndex) {
@@ -52,7 +55,4 @@ public abstract class ModelHelper<T extends Resource> {
     return result;
   }
 
-  protected final void setContentType(T resource, String type) {
-    resource.setContentType(type);
-  }
 }

@@ -87,7 +87,7 @@ public class AllTheThingsTest extends BaseTest {
     assertThat(foo.location().get("lon")).isEqualTo(13.404953999999975);
 
     assertThat(foo.entry()).isNotNull();
-    assertThat(foo.entry().remoteId()).isEqualTo("4EYJjgMg0oG084iuACY6Ue");
+    assertThat(foo.entry().resource().remoteId()).isEqualTo("4EYJjgMg0oG084iuACY6Ue");
 
     assertThat(foo.asset()).isNotNull();
     assertThat(foo.asset().remoteId()).isEqualTo("6Kknr7SqpGWs8kIKwCuQCU");
@@ -99,7 +99,7 @@ public class AllTheThingsTest extends BaseTest {
 
     assertThat(foo.entries()).isNotNull();
     assertThat(foo.entries()).hasSize(1);
-    assertThat(foo.entries().get(0).remoteId()).isEqualTo("4EYJjgMg0oG084iuACY6Ue");
+    assertThat(foo.entries().get(0).resource().remoteId()).isEqualTo("4EYJjgMg0oG084iuACY6Ue");
 
     assertThat(foo.assets()).isNotNull();
     assertThat(foo.assets()).hasSize(2);

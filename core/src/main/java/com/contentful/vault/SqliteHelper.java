@@ -20,28 +20,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 
-import static com.contentful.vault.BaseFields.CREATED_AT;
-import static com.contentful.vault.BaseFields.REMOTE_ID;
-import static com.contentful.vault.BaseFields.UPDATED_AT;
-import static com.contentful.vault.Sql.CREATE_ENTRY_TYPES;
-import static com.contentful.vault.Sql.CREATE_SYNC_INFO;
-import static com.contentful.vault.Sql.TABLE_ASSETS;
-import static com.contentful.vault.Sql.TABLE_ENTRY_TYPES;
-import static com.contentful.vault.Sql.TABLE_LINKS;
-import static com.contentful.vault.Sql.TABLE_SYNC_INFO;
-import static com.contentful.vault.Sql.assetColumnIndex;
-import static com.contentful.vault.Sql.createAssets;
-import static com.contentful.vault.Sql.createLinks;
-import static com.contentful.vault.Sql.escape;
-import static com.contentful.vault.Sql.localizeName;
-import static com.contentful.vault.Sql.resourceColumnIndex;
+import static com.contentful.vault.BaseFields.*;
+import static com.contentful.vault.Sql.*;
 
 final class SqliteHelper extends SQLiteOpenHelper {
   private final Context context;
@@ -79,7 +67,7 @@ final class SqliteHelper extends SQLiteOpenHelper {
       db.execSQL(createAssets(code));
       db.execSQL(createLinks(code));
     }
-    for (ModelHelper<?> modelHelper : helper.getModels().values()) {
+    for (ModelHelper<?,?> modelHelper : helper.getModels().values()) {
       for (String sql : modelHelper.getCreateStatements(helper)) {
         db.execSQL(sql);
       }
@@ -95,7 +83,7 @@ final class SqliteHelper extends SQLiteOpenHelper {
         db.delete(escape(localizeName(TABLE_ASSETS, code)), null, null);
         db.delete(escape(localizeName(TABLE_LINKS, code)), null, null);
 
-        for (ModelHelper<?> modelHelper : helper.getModels().values()) {
+        for (ModelHelper<?,?> modelHelper : helper.getModels().values()) {
           db.delete(escape(localizeName(modelHelper.getTableName(), code)), null, null);
         }
       }
@@ -135,14 +123,14 @@ final class SqliteHelper extends SQLiteOpenHelper {
   }
 
   @SuppressWarnings("unchecked")
-  public final <T extends Resource> T fromCursor(Class<T> clazz, Cursor cursor) {
-    T resource = null;
+  public final <T> ProxyResource<T> fromCursor(Class<T> clazz, Cursor cursor) {
+    ProxyResource<T> resource = null;
     if (Asset.class.equals(clazz)) {
-      resource = (T) assetFromCursor(cursor);
+      resource = (ProxyResource<T>) AssetProxy.of(assetFromCursor(cursor));
     } else {
-      ModelHelper<?> modelHelper = spaceHelper.getModels().get(clazz);
+      ModelHelper<T,ProxyResource<T>> modelHelper = (ModelHelper<T,ProxyResource<T>>) spaceHelper.getModels().get(clazz);
       if (modelHelper != null) {
-        resource = (T) modelHelper.fromCursor(cursor);
+        resource = modelHelper.fromCursor(cursor);
       }
     }
     if (resource != null) {

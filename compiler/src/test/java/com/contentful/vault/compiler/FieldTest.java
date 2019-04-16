@@ -34,10 +34,9 @@ public class FieldTest {
         "import com.contentful.vault.Asset;",
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.List;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field List<String> listOfStrings;",
         "  @Field List<Asset> listOfAssets;",
         "}"));
@@ -51,9 +50,8 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field(\"a\") String thing1;",
         "  @Field(\"a\") String thing2;",
         "}"));
@@ -69,10 +67,9 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.Date;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field Date thing;",
         "}"));
 
@@ -87,10 +84,9 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.List;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field List list;",
         "}"));
 
@@ -105,10 +101,9 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.List;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field static String foo;",
         "}"));
 
@@ -122,10 +117,9 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.List;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field private String foo;",
         "}"));
 
@@ -139,10 +133,9 @@ public class FieldTest {
     JavaFileObject source = JavaFileObjects.forSourceString("test.Test", Joiner.on('\n').join(
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import java.util.List;",
         "@ContentType(\"cid\")",
-        "class Test extends Resource {",
+        "class Test {",
         "  @Field List<Integer> list;",
         "}"));
 
@@ -158,13 +151,12 @@ public class FieldTest {
         "import com.contentful.vault.Asset;",
         "import com.contentful.vault.ContentType;",
         "import com.contentful.vault.Field;",
-        "import com.contentful.vault.Resource;",
         "import com.contentful.vault.SpaceHelper;",
         "import java.util.List;",
         "import java.util.Map;",
         "class Test {",
         "  @ContentType(\"cid\")",
-        "  static class Model extends Resource {",
+        "  static class Model {",
         "    @Field String foo;",
         "    @Field String bar;",
         "    @Field String baz;",

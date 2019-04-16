@@ -7,16 +7,37 @@ import com.contentful.vault.Resource;
 import java.util.List;
 
 @ContentType("shop")
-public class Shop extends Resource {
-  @Field String name;
+public class Shop {
+  @Field
+  private Resource resource;
 
-  @Field List<Product> products;
+  @Field
+  private String name;
+
+  @Field
+  private List<Product> products;
+
+  public Resource resource() {
+    return resource;
+  }
+
+  public void resource(Resource resource) {
+    this.resource = resource;
+  }
 
   public String name() {
     return name;
   }
 
+  public void name(String name) {
+    this.name = name;
+  }
+
   public List<Product> products() {
     return products;
+  }
+
+  public void products(List<Product> products) {
+    this.products = products;
   }
 }

@@ -17,21 +17,14 @@
 package com.contentful.vault.compiler;
 
 import com.contentful.vault.ModelHelper;
-import com.contentful.vault.Resource;
 import com.contentful.vault.SpaceHelper;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.WildcardTypeName;
+import com.squareup.javapoet.*;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 final class SpaceInjection extends Injection {
   private final List<ModelInjection> models;
@@ -95,7 +88,7 @@ final class SpaceInjection extends Injection {
   private void appendTypes(TypeSpec.Builder builder) {
     // Field
     TypeName classTypeName = ParameterizedTypeName.get(ClassName.get(Class.class),
-        WildcardTypeName.subtypeOf(Resource.class));
+        WildcardTypeName.subtypeOf(Object.class));
 
     specTypes =
         createMapWithInitializer("types", LinkedHashMap.class, ClassName.get(String.class),
@@ -115,7 +108,7 @@ final class SpaceInjection extends Injection {
         WildcardTypeName.subtypeOf(Object.class));
 
     TypeName helperTypeName = ParameterizedTypeName.get(ClassName.get(ModelHelper.class),
-        WildcardTypeName.subtypeOf(Object.class));
+        WildcardTypeName.subtypeOf(Object.class), WildcardTypeName.subtypeOf(Object.class));
 
     specModels = createMapWithInitializer("models", LinkedHashMap.class, classTypeName,
         helperTypeName).addModifiers(Modifier.FINAL).build();

@@ -46,6 +46,6 @@ public class SqliteEscapeTest extends BaseTest {
 
   private void assertItem(SqliteEscapeModel first) {
     assertThat(first).isNotNull();
-    assertThat(first.order).isEqualTo("foo");
+    assertThat(first.order()).isEqualTo("foo");
   }
 }

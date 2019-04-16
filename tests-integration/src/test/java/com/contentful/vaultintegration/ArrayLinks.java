@@ -31,12 +31,12 @@ public class ArrayLinks extends BaseTest {
 
     assertThat(all.size()).isEqualTo(1);
     final Product product = all.get(0);
-    assertThat(product.remoteId().equals("2ZMtY36Lj2M204kesAs4CK")).isTrue();
+    assertThat(product.resource().remoteId().equals("2ZMtY36Lj2M204kesAs4CK")).isTrue();
 
     final Shop shop = product.shops().get(0);
     assertThat(shop.name()).isEqualTo("Alexa");
     assertThat(shop.products().size()).isEqualTo(6);
-    assertThat(shop.products().get(3).remoteId()).isEqualTo(product.remoteId());
+    assertThat(shop.products().get(3).resource().remoteId()).isEqualTo(product.resource().remoteId());
 
     assertThat(shop.products().get(2).shops().size()).isEqualTo(2);
     assertThat(shop.products().get(2).shops().get(1).name()).isEqualTo("Rewe");

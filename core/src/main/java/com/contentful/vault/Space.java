@@ -28,7 +28,7 @@ public @interface Space {
   /** Remote ID */
   String value();
 
-  /** Supported {@link Resource} models. */
+  /** Supported {@link ResourceInterface} models. */
   Class<?>[] models();
 
   /**

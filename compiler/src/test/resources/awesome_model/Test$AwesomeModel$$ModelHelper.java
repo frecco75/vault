@@ -1,5 +1,5 @@
 import android.database.Cursor;
-import com.contentful.vault.Asset;
+import com.contentful.vault.AssetProxy;
 import com.contentful.vault.FieldMeta;
 import com.contentful.vault.ModelHelper;
 import com.contentful.vault.SpaceHelper;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class Test$AwesomeModel$$ModelHelper extends ModelHelper<Test.AwesomeModel> {
+public final class Test$AwesomeModel$$ModelHelper extends ModelHelper<Test.AwesomeModel, Test$AwesomeModel$$ProxyResource> {
   final List<FieldMeta> fields = new ArrayList<FieldMeta>();
 
   public Test$AwesomeModel$$ModelHelper() {
@@ -19,13 +19,11 @@ public final class Test$AwesomeModel$$ModelHelper extends ModelHelper<Test.Aweso
     fields.add(FieldMeta.builder().setId("mapField").setName("mapField").setSqliteType("BLOB").build());
     fields.add(FieldMeta.builder().setId("assetLink").setName("assetLink").setLinkType("ASSET").build());
     fields.add(FieldMeta.builder().setId("entryLink").setName("entryLink").setLinkType("ENTRY").build());
-    fields.add(FieldMeta.builder().setId("arrayOfAssets").setName("arrayOfAssets").setArrayType(
-        "com.contentful.vault.Asset").build());
+    fields.add(FieldMeta.builder().setId("arrayOfAssets").setName("arrayOfAssets").setArrayType("com.contentful.vault.Asset").build());
     fields.add(FieldMeta.builder().setId("arrayOfModels").setName("arrayOfModels").setArrayType("Test.AwesomeModel").build());
-    fields.add(FieldMeta.builder().setId("arrayOfSymbols").setName("arrayOfSymbols").setSqliteType(
-        "BLOB").setArrayType("java.lang.String").build());
-    fields.add(FieldMeta.builder().setId("privateField").setName("privateField").setSetter("setPrivateField").setSqliteType("TEXT").build());
-    fields.add(FieldMeta.builder().setId("privateFluentField").setName("privateFluentField").setSetter("privateFluentField").setSqliteType("TEXT").build());
+    fields.add(FieldMeta.builder().setId("arrayOfSymbols").setName("arrayOfSymbols").setSqliteType("BLOB").setArrayType("java.lang.String").build());
+    fields.add(FieldMeta.builder().setId("privateField").setName("privateField").setSetter("setPrivateField").setGetter("getPrivateField").setSqliteType("TEXT").build());
+    fields.add(FieldMeta.builder().setId("privateFluentField").setName("privateFluentField").setSetter("privateFluentField").setGetter("privateFluentField").setSqliteType("TEXT").build());
   }
 
   @Override
@@ -49,55 +47,60 @@ public final class Test$AwesomeModel$$ModelHelper extends ModelHelper<Test.Aweso
 
   @Override
   @SuppressWarnings("unchecked")
-  public Test.AwesomeModel fromCursor(Cursor cursor) {
-    Test.AwesomeModel result = new Test.AwesomeModel();
-    setContentType(result, "cid");
-    result.textField = cursor.getString(3);
-    result.booleanField = Integer.valueOf(1).equals(cursor.getInt(4));
-    result.integerField = cursor.getInt(5);
-    result.doubleField = cursor.getDouble(6);
-    result.mapField = fieldFromBlob(HashMap.class, cursor, 7);
-    result.arrayOfSymbols = fieldFromBlob(ArrayList.class, cursor, 8);
-    result.setPrivateField(cursor.getString(9));
+  public Test$AwesomeModel$$ProxyResource fromCursor(Cursor cursor) {
+    Test$AwesomeModel$$ProxyResource result = new Test$AwesomeModel$$ProxyResource();
+    result.setContentType("cid");
+    result.textField(cursor.getString(3));
+    result.booleanField(Integer.valueOf(1).equals(cursor.getInt(4)));
+    result.integerField(cursor.getInt(5));
+    result.doubleField(cursor.getDouble(6));
+    result.mapField(fieldFromBlob(HashMap.class, cursor, 7));
+    result.arrayOfSymbols(fieldFromBlob(ArrayList.class, cursor, 8));
+    result.privateField(cursor.getString(9));
     result.privateFluentField(cursor.getString(10));
     return result;
   }
 
   @Override
+  public Test$AwesomeModel$$ProxyResource fromResource(Test.AwesomeModel resource) {
+    return Test$AwesomeModel$$ProxyResource.of(resource);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
-  public boolean setField(Test.AwesomeModel resource, String name, Object value) {
+  public boolean setField(Test$AwesomeModel$$ProxyResource resource, String name, Object value) {
     if ("textField".equals(name)) {
-      resource.textField = (String) value;
+      resource.textField((String) value);
     }
     else if ("booleanField".equals(name)) {
-      resource.booleanField = (Boolean) value;
+      resource.booleanField((Boolean) value);
     }
     else if ("integerField".equals(name)) {
-      resource.integerField = (Integer) value;
+      resource.integerField((Integer) value);
     }
     else if ("doubleField".equals(name)) {
-      resource.doubleField = (Double) value;
+      resource.doubleField((Double) value);
     }
     else if ("mapField".equals(name)) {
-      resource.mapField = (Map) value;
+      resource.mapField((Map) value);
     }
     else if ("assetLink".equals(name)) {
-      resource.assetLink = (Asset) value;
+      resource.assetLink((AssetProxy) value);
     }
     else if ("entryLink".equals(name)) {
-      resource.entryLink = (Test.AwesomeModel) value;
+      resource.entryLink((Test$AwesomeModel$$ProxyResource) value);
     }
     else if ("arrayOfAssets".equals(name)) {
-      resource.arrayOfAssets = (List<Asset>) value;
+      resource.arrayOfAssets((List<AssetProxy>) value);
     }
     else if ("arrayOfModels".equals(name)) {
-      resource.arrayOfModels = (List<Test.AwesomeModel>) value;
+      resource.arrayOfModels((List<Test$AwesomeModel$$ProxyResource>) value);
     }
     else if ("arrayOfSymbols".equals(name)) {
-      resource.arrayOfSymbols = (List<String>) value;
+      resource.arrayOfSymbols((List<String>) value);
     }
     else if ("privateField".equals(name)) {
-      resource.setPrivateField((String) value);
+      resource.privateField((String) value);
     }
     else if ("privateFluentField".equals(name)) {
       resource.privateFluentField((String) value);

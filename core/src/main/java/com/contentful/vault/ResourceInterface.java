@@ -14,32 +14,16 @@
  * limitations under the License.
  */
 
-package com.contentful.vaultintegration.lib.vault;
+package com.contentful.vault;
 
-import com.contentful.vault.ContentType;
-import com.contentful.vault.Field;
-import com.contentful.vault.Resource;
+public interface ResourceInterface {
 
-import java.util.Map;
+  String remoteId();
 
-@ContentType("1HRG7uai2g8YMswwqoAaC8")
-public class BlobResource {
-  @Field
-  private final Resource resource;
+  String createdAt();
 
-  @Field
-  private final Map object;
+  String updatedAt();
 
-  public BlobResource(Resource resource, Map object) {
-    this.resource = resource;
-    this.object = object;
-  }
+  String contentType();
 
-  public Resource resource() {
-    return resource;
-  }
-
-  public Map object() {
-    return object;
-  }
 }

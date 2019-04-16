@@ -24,9 +24,9 @@ public abstract class SpaceHelper {
 
   public abstract int getDatabaseVersion();
 
-  public abstract Map<Class<?>, ModelHelper<?>> getModels();
+  public abstract Map<Class<?>, ModelHelper<?,?>> getModels();
 
-  public abstract Map<String, Class<? extends Resource>> getTypes();
+  public abstract Map<String, Class<?>> getTypes();
 
   public abstract String getCopyPath();
 

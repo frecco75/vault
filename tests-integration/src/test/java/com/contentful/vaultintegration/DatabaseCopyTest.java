@@ -16,14 +16,7 @@
 
 package com.contentful.vaultintegration;
 
-import com.contentful.vault.Asset;
-import com.contentful.vault.ContentType;
-import com.contentful.vault.Field;
-import com.contentful.vault.Resource;
-import com.contentful.vault.Space;
-import com.contentful.vault.Vault;
-import com.contentful.vault.VaultDatabaseExporter;
-
+import com.contentful.vault.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,10 +42,37 @@ public class DatabaseCopyTest extends BaseTest {
   }
 
   @ContentType("cat")
-  static class Cat extends Resource {
-    @Field String name;
-    @Field Cat bestFriend;
-    @Field Asset image;
+  static class Cat {
+    @Field
+    private String name;
+    @Field
+    private Cat bestFriend;
+    @Field
+    private Asset image;
+
+    public String name() {
+      return name;
+    }
+
+    public Cat bestFriend() {
+      return bestFriend;
+    }
+
+    public Asset image() {
+      return image;
+    }
+
+    public void name(String name) {
+      this.name = name;
+    }
+
+    public void bestFriend(Cat bestFriend) {
+      this.bestFriend = bestFriend;
+    }
+
+    public void image(Asset image) {
+      this.image = image;
+    }
   }
 
   @Override protected void setupVault() {

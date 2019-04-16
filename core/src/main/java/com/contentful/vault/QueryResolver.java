@@ -17,24 +17,23 @@
 package com.contentful.vault;
 
 import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.text.TextUtils.join;
-import static com.contentful.vault.Sql.TABLE_ASSETS;
-import static com.contentful.vault.Sql.escape;
-import static com.contentful.vault.Sql.localizeName;
+import static com.contentful.vault.Sql.*;
 
-final class QueryResolver<T extends Resource> {
+final class QueryResolver<T> {
   private final AbsQuery<T, ?> query;
 
   private final Vault vault;
 
-  private final Map<String, Resource> assets = new HashMap<>();
+  private final Map<String, ProxyResource<?>> assets = new HashMap<>();
 
-  private final Map<String, Resource> entries = new HashMap<>();
+  private final Map<String, ProxyResource<?>> entries = new HashMap<>();
 
   QueryResolver(AbsQuery<T, ?> query) {
     this.query = query;
@@ -43,12 +42,12 @@ final class QueryResolver<T extends Resource> {
 
   List<T> all(boolean resolveLinks, String locale) {
     Cursor cursor = cursorFromQuery(query, locale);
-    List<T> result = new ArrayList<T>();
+    List<ProxyResource<T>> result = new ArrayList<>();
     try {
       if (cursor.moveToFirst()) {
-        Map<String, Resource> cache = cacheForType(query.type());
+        Map<String, ProxyResource<?>> cache = cacheForType(query.type());
         do {
-          T item = vault.getSqliteHelper().fromCursor(query.type(), cursor);
+          ProxyResource<T> item = vault.getSqliteHelper().fromCursor(query.type(), cursor);
           if (item == null) {
             continue;
           }
@@ -64,24 +63,30 @@ final class QueryResolver<T extends Resource> {
       resolveLinks(result, locale);
     }
 
-    return result;
+    //Conversion to original type
+    List<T> resources = new ArrayList<>();
+    for(ProxyResource<T> proxyResource : result) {
+      resources.add(proxyResource.toOriginalType());
+    }
+
+    return resources;
   }
 
-  private Map<String, Resource> cacheForType(Class<T> type) {
+  private Map<String, ProxyResource<?>> cacheForType(Class<T> type) {
     if (type == Asset.class) {
       return assets;
     }
     return entries;
   }
 
-  private void resolveLinks(List<T> resources, String locale) {
+  private void resolveLinks(List<ProxyResource<T>> resources, String locale) {
     LinkResolver resolver = new LinkResolver(query, assets, entries);
-    for (T resource : resources) {
+    for (ProxyResource<T> resource : resources) {
       resolver.resolveLinks(resource, helperForEntry(resource).getFields(), locale);
     }
   }
 
-  private ModelHelper<?> helperForEntry(T resource) {
+  private ModelHelper<?,?> helperForEntry(ProxyResource<T> resource) {
     SpaceHelper spaceHelper = vault.getSqliteHelper().getSpaceHelper();
     Class<?> modelType = spaceHelper.getTypes().get(resource.contentType());
     return spaceHelper.getModels().get(modelType);

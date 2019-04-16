@@ -25,5 +25,7 @@ public final class Constants {
 
   public static final String SUFFIX_MODEL = "$$ModelHelper";
 
+  public static final String SUFFIX_PROXY = "$$ProxyResource";
+
   public static final String SUFFIX_SPACE = "$$SpaceHelper";
 }

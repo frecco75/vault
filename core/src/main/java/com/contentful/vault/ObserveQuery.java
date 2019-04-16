@@ -16,14 +16,14 @@
 
 package com.contentful.vault;
 
-import java.util.List;
-
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
-public final class ObserveQuery<T extends Resource> extends AbsQuery<T, ObserveQuery<T>> {
+import java.util.List;
+
+public final class ObserveQuery<T> extends AbsQuery<T, ObserveQuery<T>> {
   ObserveQuery(Class<T> type, Vault vault) {
     super(type, vault);
   }
@@ -33,10 +33,10 @@ public final class ObserveQuery<T extends Resource> extends AbsQuery<T, ObserveQ
   }
 
   public Flowable<T> all(String locale) {
-    return Flowable.create(new AllOnSubscribe<T>(this, locale), BackpressureStrategy.BUFFER);
+    return Flowable.create(new AllOnSubscribe<>(this, locale), BackpressureStrategy.BUFFER);
   }
 
-  static class AllOnSubscribe<T extends Resource> implements FlowableOnSubscribe<T> {
+  static class AllOnSubscribe<T> implements FlowableOnSubscribe<T> {
     private final ObserveQuery<T> query;
     private final String locale;
 
@@ -45,7 +45,7 @@ public final class ObserveQuery<T extends Resource> extends AbsQuery<T, ObserveQ
       this.locale = locale;
     }
 
-    @Override public void subscribe(FlowableEmitter<T> flowableEmitter) throws Exception {
+    @Override public void subscribe(FlowableEmitter<T> flowableEmitter) {
       try {
         FetchQuery<T> fetchQuery = query.vault().fetch(query.type());
         fetchQuery.setParams(query.params());

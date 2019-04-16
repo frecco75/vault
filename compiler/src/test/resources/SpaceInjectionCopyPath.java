@@ -1,5 +1,4 @@
 import com.contentful.vault.ModelHelper;
-import com.contentful.vault.Resource;
 import com.contentful.vault.SpaceHelper;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -7,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public final class Test$AwesomeSpace$$SpaceHelper extends SpaceHelper {
-  final Map<Class<?>, ModelHelper<?>> models = new LinkedHashMap<Class<?>, ModelHelper<?>>();
+  final Map<Class<?>, ModelHelper<?, ?>> models = new LinkedHashMap<Class<?>, ModelHelper<?, ?>>();
 
-  final Map<String, Class<? extends Resource>> types = new LinkedHashMap<String, Class<? extends Resource>>();
+  final Map<String, Class<?>> types = new LinkedHashMap<String, Class<?>>();
 
   final List<String> locales = Arrays.asList("foo");
 
@@ -29,12 +28,12 @@ public final class Test$AwesomeSpace$$SpaceHelper extends SpaceHelper {
   }
 
   @Override
-  public Map<Class<?>, ModelHelper<?>> getModels() {
+  public Map<Class<?>, ModelHelper<?, ?>> getModels() {
     return models;
   }
 
   @Override
-  public Map<String, Class<? extends Resource>> getTypes() {
+  public Map<String, Class<?>> getTypes() {
     return types;
   }
 

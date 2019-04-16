@@ -169,7 +169,7 @@ public final class SyncRunnable implements Runnable {
       if (modelClass == null) {
         return;
       }
-      ModelHelper<?> modelHelper = spaceHelper.getModels().get(modelClass);
+      ModelHelper<?,?> modelHelper = spaceHelper.getModels().get(modelClass);
       saveEntry((CDAEntry) resource, modelHelper.getTableName(), modelHelper.getFields());
     }
   }

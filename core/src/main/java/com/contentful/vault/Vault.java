@@ -20,8 +20,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Looper;
-
-import com.contentful.java.cda.CDAClient;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,11 +32,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 
 public class Vault {
   public static final String ACTION_SYNC_COMPLETE = "com.contentful.vault.ACTION_SYNC_COMPLETE";
@@ -122,11 +119,11 @@ public class Vault {
         .build());
   }
 
-  public <T extends Resource> FetchQuery<T> fetch(Class<T> type) {
+  public <T> FetchQuery<T> fetch(Class<T> type) {
     return new FetchQuery<>(type, this);
   }
 
-  public <T extends Resource> ObserveQuery<T> observe(Class<T> type) {
+  public <T> ObserveQuery<T> observe(Class<T> type) {
     return new ObserveQuery<>(type, this);
   }
 
@@ -168,9 +165,7 @@ public class Vault {
       return (SpaceHelper) clazz.newInstance();
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("Cannot find generated class for space: " + space.getName(), e);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (InstantiationException e) {
+    } catch (IllegalAccessException | InstantiationException e) {
       throw new RuntimeException(e);
     }
   }

@@ -18,6 +18,7 @@ package com.contentful.vault;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +26,7 @@ import java.util.Map;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.vault.BaseFields.REMOTE_ID;
-import static com.contentful.vault.Sql.TABLE_ENTRY_TYPES;
-import static com.contentful.vault.Sql.TABLE_LINKS;
-import static com.contentful.vault.Sql.escape;
-import static com.contentful.vault.Sql.localizeName;
+import static com.contentful.vault.Sql.*;
 
 final class LinkResolver {
   private static final String LINKS_WHERE_CLAUSE =
@@ -39,17 +37,17 @@ final class LinkResolver {
 
   private final AbsQuery<?, ?> query;
 
-  private final Map<String, Resource> assets;
+  private final Map<String, ProxyResource<?>> assets;
 
-  private final Map<String, Resource> entries;
+  private final Map<String, ProxyResource<?>> entries;
 
-  LinkResolver(AbsQuery<?, ?> query, Map<String, Resource> assets, Map<String, Resource> entries) {
+  LinkResolver(AbsQuery<?, ?> query, Map<String, ProxyResource<?>> assets, Map<String, ProxyResource<?>> entries) {
     this.query = query;
     this.assets = assets;
     this.entries = entries;
   }
 
-  void resolveLinks(Resource resource, List<FieldMeta> links, String locale) {
+  void resolveLinks(ProxyResource<?> resource, List<FieldMeta> links, String locale) {
     for (FieldMeta field : links) {
       if (field.isLink() || field.isArrayOfLinks()) {
         resolveLinksForField(resource, field, locale);
@@ -57,14 +55,13 @@ final class LinkResolver {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private void resolveLinksForField(Resource resource, FieldMeta field, String locale) {
+  private <T> void resolveLinksForField(ProxyResource<T> resource, FieldMeta field, String locale) {
     List<Link> links = fetchLinks(resource.remoteId(), field, locale);
-    List<Resource> targets = null;
+    List<ProxyResource> targets = null;
     if (links.size() > 0) {
       targets = new ArrayList<>();
       for (Link link : links) {
-        Resource child = getCachedResourceOrFetch(link, locale);
+        ProxyResource<?> child = getCachedResourceOrFetch(link, locale);
         if (child != null) {
           targets.add(child);
         }
@@ -82,15 +79,15 @@ final class LinkResolver {
       result = targets.get(0);
     }
     if (result != null) {
-      ModelHelper<Resource> modelHelper = getHelperForEntry(resource);
+      ModelHelper<T, ProxyResource<T>> modelHelper = getHelperForEntry(resource);
       modelHelper.setField(resource, field.name(), result);
     }
   }
 
-  private Resource getCachedResourceOrFetch(Link link, String locale) {
+  private ProxyResource<?> getCachedResourceOrFetch(Link link, String locale) {
     boolean linksToAsset = link.isAsset();
-    Map<String, Resource> cache = linksToAsset ? assets : entries;
-    Resource child = cache.get(link.child());
+    Map<String, ProxyResource<?>> cache = linksToAsset ? assets : entries;
+    ProxyResource<?> child = cache.get(link.child());
     if (child == null) {
       // Link target not found in cache, fetch from DB
       child = resourceForLink(link, locale);
@@ -108,10 +105,16 @@ final class LinkResolver {
   }
 
   @SuppressWarnings("unchecked")
-  private ModelHelper<Resource> getHelperForEntry(Resource resource) {
+  private <T> ModelHelper<T, ProxyResource<T>> getHelperForEntry(ProxyResource<T> resource) {
     SpaceHelper spaceHelper = query.vault().getSqliteHelper().getSpaceHelper();
     Class<?> modelType = spaceHelper.getTypes().get(resource.contentType());
-    return (ModelHelper<Resource>) spaceHelper.getModels().get(modelType);
+    return (ModelHelper<T, ProxyResource<T>>) spaceHelper.getModels().get(modelType);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> ModelHelper<T, ProxyResource<T>> getHelperForEntry(T object) {
+    SpaceHelper spaceHelper = query.vault().getSqliteHelper().getSpaceHelper();
+    return (ModelHelper<T, ProxyResource<T>>) spaceHelper.getModels().get(object.getClass());
   }
 
   private List<Link> fetchLinks(String parentId, FieldMeta field, String locale) {
@@ -179,9 +182,9 @@ final class LinkResolver {
     return result;
   }
 
-  private Resource resourceForLink(Link link, String locale) {
-    Resource resource = null;
-    Class<? extends Resource> clazz;
+  private ProxyResource<?> resourceForLink(Link link, String locale) {
+    Object resource = null;
+    Class<?> clazz;
     if (link.isAsset()) {
       clazz = Asset.class;
     } else {
@@ -196,6 +199,20 @@ final class LinkResolver {
           .where(REMOTE_ID + " = ?", link.child())
           .resolveFirst(false, locale);
     }
-    return resource;
+    return proxy(resource);
   }
+
+  private ProxyResource<?> proxy(Object object) {
+    if(object == null) {
+      return null;
+    }
+
+    if(object instanceof Asset) {
+      return AssetProxy.of((Asset) object);
+    }
+
+    return getHelperForEntry(object).fromResource(object);
+
+  }
+
 }
